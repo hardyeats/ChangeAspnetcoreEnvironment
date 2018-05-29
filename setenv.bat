@@ -1,27 +1,18 @@
 @echo off
-SET env="%ASPNETCORE_ENVIRONMENT%"
-ECHO 현재 ASP.NET Core 환경 : %env%
+SET env=%ASPNETCORE_ENVIRONMENT%
+ECHO Current ASP.NET Core Environment : [%env%]
+SET /p wannaChange=Do you want to change you environment [y/n]?
 
-if %env%=="Development" GOTO DEVENV
-
-ECHO 개발 환경이 아닙니다.
-SET /p wannaChange=개발 환경으로 바꾸시겠습니까 [y/n]?
-IF %wannaChange%==y GOTO WANNACHANGE
+if %wannaChange%==y GOTO CHANGE_ENV
+REM This user doesn't want to change.
+ECHO Environment is still [%env%].
 GOTO COMPLETE
 
-
-:WANNACHANGE
-ECHO 개발 환경으로 바꿔볼게요.
-SETX ASPNETCORE_ENVIRONMENT Development
-SET /p beforeExit=엔터를 눌러 종료하세요.
-EXIT
-
-
-:DEVENV
-echo 개발 환경입니다.
-echo 배포 환경("Production")으로 바꾸시겠습니까?
-SET /p beforeExit=엔터를 눌러 종료하세요...
+:CHANGE_ENV
+REM This user wants to change.
+if %env%==Development ( SETX ASPNETCORE_ENVIRONMENT Production ) else ( SETX ASPNETCORE_ENVIRONMENT Development )
+Echo The environment variable has changed.
+SET /p beforeExit=Press <Enter> to refresh environment variables...
 EXIT
 
 :COMPLETE
-
